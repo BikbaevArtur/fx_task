@@ -1,7 +1,8 @@
 package com.example.demo;
 
 import com.example.demo.data.Requests;
-import com.example.demo.model.Vacancy;
+import com.example.demo.model.Application;
+import com.example.demo.model.VacancySimplePropertyMapper;
 import javafx.collections.FXCollections;
 import javafx.collections.ObservableList;
 import javafx.fxml.FXML;
@@ -68,28 +69,39 @@ public class HelloController {
     private TableView<Application> table_applications;
 
     @FXML
-    private TableView<Vacancy>
+    private TableView<VacancySimplePropertyMapper>
             table_vacancies,
             pane_dop1;
 
     private final ObservableList<Application> applications = FXCollections.observableArrayList();
-    private final ObservableList<Vacancy> vacancies = FXCollections.observableArrayList();
-    private final ObservableList<Vacancy> app_on_vac = FXCollections.observableArrayList();
+    private final ObservableList<VacancySimplePropertyMapper> vacancies = FXCollections.observableArrayList();
+    private final ObservableList<VacancySimplePropertyMapper> app_on_vac = FXCollections.observableArrayList();
 
     private Requests requests;
 
 
     boolean initiated = false;
 
+
+
+    /**
+     * Загружает данные из базы данных с помощью класса Requests.
+     */
+
     void load() throws SQLException {
         requests = new Requests();
-        List<Vacancy> list = requests.getAppOnVac();
-        for(Vacancy vacancy : list){
-            vacancy.setNum(app_on_vac.size()+1);
+        List<VacancySimplePropertyMapper> list = requests.getAppOnVac();
+        for (VacancySimplePropertyMapper vacancy : list) {
+            vacancy.setNum(app_on_vac.size() + 1);
             app_on_vac.add(vacancy);
         }
     }
 
+
+    /**
+     *  Инициализирует контроллер. Устанавливает форматирование текстовых полей,
+     *  загружает данные из базы данных, инициализирует элементы интерфейса.
+     */
     void init() {
         Pattern validEditingState = Pattern.compile("-?(([1-9][0-9]*)|0)?(\\.[0-9]*)?");
         UnaryOperator<TextFormatter.Change> filter = c -> {
@@ -132,6 +144,9 @@ public class HelloController {
         initiated = true;
     }
 
+    /**
+     * Сбрасывает видимость и состояние всех панелей и кнопок, а также настраивает таблицы.
+     */
     void reButtons() {
         if (!initiated) init();
 
@@ -181,19 +196,27 @@ public class HelloController {
         pane_dop1.getColumns().get(3).setCellValueFactory(new PropertyValueFactory<>("payed"));
     }
 
+    /**
+     * Обрабатывает нажатие кнопки подтверждения оплаты.
+     * Обновляет состояние выбранной вакансии и добавляет ее в список вакансий.
+     */
     @FXML
     protected void onBtnConfirmPayment1() {
         reButtons();
-        Vacancy prop = pane_dop1.getSelectionModel().getSelectedItem();
+        VacancySimplePropertyMapper prop = pane_dop1.getSelectionModel().getSelectedItem();
         prop.setPayed(true);
         vacancies.add(prop);
         table_vacancies.setItems(vacancies);
-        for (Vacancy vacancy : vacancies) {
+        for (VacancySimplePropertyMapper vacancy : vacancies) {
             vacancy.setNum(vacancies.indexOf(vacancy) + 1);
         }
         onBtnVacance();
     }
 
+    /**
+     * Обрабатывает нажатие кнопки резюме.
+     * Активирует панель резюме и вызывает метод onBtnRes1()
+     */
     @FXML
     protected void onBtnResume() {
         reButtons();
@@ -202,6 +225,10 @@ public class HelloController {
         onBtnRes1();
     }
 
+    /**
+     * Обрабатывает нажатие кнопки вакансий. Активирует панель вакансий.
+     */
+
     @FXML
     protected void onBtnVacance() {
         reButtons();
@@ -209,6 +236,9 @@ public class HelloController {
         pane_vacancy.setVisible(true);
     }
 
+    /**
+     * Обрабатывает нажатие кнопки заявок. Активирует панель заявок.
+     */
     @FXML
     protected void onBtnApplications() {
         reButtons();
@@ -216,6 +246,9 @@ public class HelloController {
         pane_applications.setVisible(true);
     }
 
+    /**
+     * Обрабатывает нажатие кнопки новой заявки. Переходит на панель новой заявки.
+     */
     @FXML
     protected void onBtnNewApplication() {
         reButtons();
@@ -223,6 +256,9 @@ public class HelloController {
         pane_new_application.setVisible(true);
     }
 
+    /**
+     * Обрабатывает нажатие кнопки новой вакансии. Переходит на панель новой вакансии.
+     */
     @FXML
     protected void onBtnNewVacancy() {
         reButtons();
@@ -230,6 +266,9 @@ public class HelloController {
         pane_new_vacancy.setVisible(true);
     }
 
+    /**
+     *  Удаляет выбранную заявку из списка заявок.
+     */
     @FXML
     protected void onBtnDeleteApplication() {
         applications.remove(table_applications.getSelectionModel().getFocusedIndex());
@@ -238,6 +277,10 @@ public class HelloController {
             application.setNum(applications.indexOf(application) + 1);
         }
     }
+
+    /**
+     * Обрабатывает нажатие кнопки подтверждения заявки. Добавляет новую заявку в список заявок.
+     */
 
     @FXML
     protected void onBtnConfirmApplication() {
@@ -254,11 +297,14 @@ public class HelloController {
         onBtnApplications();
     }
 
+    /**
+     * Обрабатывает нажатие кнопки подтверждения вакансии. Добавляет новую вакансию в список вакансий.
+     */
     @FXML
     protected void onBtnConfirmVacancy() {
         reButtons();
 
-        Vacancy vacancy = new Vacancy(
+        VacancySimplePropertyMapper vacancy = new VacancySimplePropertyMapper(
                 txt_name.getText(),
                 txt_desc.getText(),
                 txt_stricts.getText(),
@@ -273,10 +319,17 @@ public class HelloController {
         onBtnDop();
     }
 
+    /**
+     * Заготовка для обработки нажатия кнопки подтверждения резюме.
+     */
+
     @FXML
     protected void onBtnConfirmResume() {
     }
 
+    /**
+     *  Переключает видимость на первую панель резюме.
+     */
     @FXML
     protected void onBtnRes1() {
         pane_res1.setVisible(true);
@@ -287,6 +340,9 @@ public class HelloController {
         btn_res3.setDisable(false);
     }
 
+    /**
+     * Переключает видимость на вторую панель резюме.
+     */
     @FXML
     protected void onBtnRes2() {
         pane_res1.setVisible(false);
@@ -297,6 +353,9 @@ public class HelloController {
         btn_res3.setDisable(false);
     }
 
+    /**
+     * Переключает видимость на третью панель резюме.
+     */
     @FXML
     protected void onBtnRes3() {
         pane_res1.setVisible(false);
@@ -307,6 +366,10 @@ public class HelloController {
         btn_res3.setDisable(true);
     }
 
+    /**
+     * Обрабатывает нажатие кнопки "Дополнительно".
+     * Активирует панель "Дополнительно" и вызывает метод onBtnDop1().
+     */
     @FXML
     protected void onBtnDop() {
         reButtons();
@@ -314,6 +377,10 @@ public class HelloController {
         pane_dop.setVisible(true);
         onBtnDop1();
     }
+
+    /**
+     * Переключает видимость на первую панель "Дополнительно".
+     */
 
     @FXML
     protected void onBtnDop1() {
@@ -323,6 +390,9 @@ public class HelloController {
         btn_dop2.setDisable(false);
     }
 
+    /**
+     * Переключает видимость на вторую панель "Дополнительно".
+     */
     @FXML
     protected void onBtnDop2() {
         pane_dop1.setVisible(false);

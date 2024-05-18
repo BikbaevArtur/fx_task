@@ -5,7 +5,7 @@ import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;
 import javafx.beans.property.SimpleStringProperty;
 
-public class Vacancy {
+public class VacancySimplePropertyMapper {
 
     private SimpleIntegerProperty num; //0
     private SimpleStringProperty name;//1
@@ -16,7 +16,7 @@ public class Vacancy {
     private SimpleFloatProperty sum;//6
     private SimpleBooleanProperty payed;//7
 
-    public Vacancy() {
+    public VacancySimplePropertyMapper() {
     }
 
     /**
@@ -29,7 +29,7 @@ public class Vacancy {
      * @param sum сумма на оплату
      * @param payed оплачена ли вакансии
      */
-    public Vacancy( String name, String desc, String stricts, String type, String vid, float sum, boolean payed) {
+    public VacancySimplePropertyMapper(String name, String desc, String stricts, String type, String vid, float sum, boolean payed) {
         this.num = new SimpleIntegerProperty();
         this.name = new SimpleStringProperty(name);
         this.desc = new SimpleStringProperty(desc);

@@ -1,4 +1,4 @@
-package com.example.demo;
+package com.example.demo.model;
 
 import javafx.beans.property.SimpleFloatProperty;
 import javafx.beans.property.SimpleIntegerProperty;

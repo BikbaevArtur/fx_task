@@ -1,7 +1,8 @@
 package com.example.demo;
 
 import com.example.demo.data.Requests;
-import com.example.demo.model.Vacancy;
+import com.example.demo.model.Resume;
+import com.example.demo.model.VacancySimplePropertyMapper;
 import javafx.application.Application;
 import javafx.fxml.FXMLLoader;
 import javafx.scene.Scene;
@@ -25,8 +26,10 @@ public class HelloApplication extends Application {
     public static void main(String[] args) throws SQLException {
 
         Requests requests = new Requests();
-        List<Vacancy> vacancies = requests.getAppOnVac();
-        vacancies.forEach(System.out::println);
+        List<Resume> resumeList = requests.getAllResume();
+        System.out.println(requests.findMessengerById(1));
+        System.out.println(resumeList);
+        resumeList.forEach(System.out::println);
 
       launch();
 
